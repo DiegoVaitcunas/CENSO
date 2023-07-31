@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Censo App</title>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
+</head>
+<body>
+    <ion-app>
+        <ion-router id="ruteo">
+            <ion-route url="/" component="page-home"></ion-route>
+            <ion-route url="/login" component="page-login"></ion-route>
+            <ion-route url="/registro" component="page-registro"></ion-route>
+            <ion-route url="/registrar-censo" component="page-registros"></ion-route>
+        </ion-router>
+        <ion-nav></ion-nav>
+
+        <ion-menu side="start" content-id="main" id="menu">
+            <ion-header>
+              <ion-toolbar color="primary">
+                <ion-title>Menu Content</ion-title>
+              </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-list>
+                    <ion-item href="/" onclick="cerrarMenu()">Home</ion-item>
+                    <ion-item href="/login" onclick="cerrarMenu()">Login</ion-item>
+                    <ion-item href="/registro" onclick="cerrarMenu()">Registro</ion-item>
+                    <ion-item href="/registrar-censo" onclick="cerrarMenu()">Registro Censo</ion-item>
+                </ion-list>
+            </ion-content>
+        </ion-menu>
+        <div id="main"></div>
+
+        <page-home class="ion-page" id="pantalla-home">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                    <ion-title>Home</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                Pantalla de Home
+            </ion-content>
+        </page-home>
+
+        <page-login class="ion-page" id="pantalla-login">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                    <ion-title>Login</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                Pantalla de Login
+            </ion-content>
+        </page-login>
+
+        <page-registro class="ion-page" id="pantalla-registro">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                    <ion-title>Registro</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                Pantalla de Registro
+            </ion-content>
+        </page-registro>
+
+        <page-registros class="ion-page" id="pantalla-registros">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                    <ion-title>Registros</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                Pantalla de Registros
+            </ion-content>
+        </page-registros>
+
+    </ion-app>
+    <script src="js/funciones.js"></script>
+</body>
+</html>
