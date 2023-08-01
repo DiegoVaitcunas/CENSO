@@ -51,7 +51,7 @@ function ocultarPantallas(){
     HOME.style.display = 'none';
     LOGIN.style.display = 'none';
     REGISTRO.style.display = 'none';
-    //REGISTRAR_CENSO.style.display = 'none';
+    REGISTRAR_CENSO.style.display = 'none';
 }
 
 function mostrarLogin() {
@@ -127,7 +127,11 @@ function btnLoginIngresarHandler () {
             body: JSON.stringify(datos)
         })
         .then(response => {
-            console.log("LLego al then", response);
+            console.log("Llego al then", response);
+            if (response.status === 200) {
+                vaciarCamposLogin();
+                mostrarToast('SUCCESS', 'Login exitoso', 'Ya esta en el sistema');
+            }
             return response.json();
         })
         .then(data => {
@@ -163,6 +167,13 @@ async function mostrarToast(tipo, titulo, mensaje) {
     document.body.appendChild(toast);
     return toast.present();
 }
+
+function vaciarCamposLogin() {
+    document.querySelector("#txtLoginEmail").value = '';
+    document.querySelector("#txtLoginPassword").value = '';
+    //document.querySelector("#txtVerificarPassword").value = '';
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -200,8 +211,8 @@ function btnRegistroRegistrarseHandler () {
                 return response.json();
             })
             .then(data => {
-                if (data.error) {
-                    mostrarToast('ERROR', 'Error', data.error);
+                if (data.mensaje) {
+                    mostrarToast('ERROR', 'Error', data.mensaje);
                 }
             })
             .catch(error => console.log(error));
@@ -216,6 +227,8 @@ function btnRegistroRegistrarseHandler () {
     document.querySelector("#txtRegistroPassword").value = '';
     //document.querySelector("#txtVerificarPassword").value = '';
 }
+
+
 
 
 
