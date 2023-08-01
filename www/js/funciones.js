@@ -4,15 +4,25 @@ const ROUTER = document.querySelector('#ruteo');
 const HOME = document.querySelector('#pantalla-home');
 const LOGIN = document.querySelector('#pantalla-login');
 const REGISTRO = document.querySelector('#pantalla-registro');
-//const REGISTRAR_CENSO = document.querySelector('#pantalla-registros');
+const REGISTRAR_CENSO = document.querySelector('#pantalla-registros');
+const NAV = document.querySelector("#nav");
 /*const MAPA = document.querySelector('#menu');*/
 
+let personas = [];
+let tokenUsuarioLogueado = '';
+let baseURL = 'https://censo.develotion.com/'
+
+inicializar();
+
+function inicializar() {
+    actualizarMenu()
+    suscripcionAEventos()
+    mostrarLogin()
+}
 
 function cerrarMenu(){
     MENU.close();
 }
-
-ROUTER.addEventListener('ionRouteDidChange', navegar);
 
 function navegar(evt){
     console.log(evt.detail.to);
@@ -44,18 +54,14 @@ function ocultarPantallas(){
     //REGISTRAR_CENSO.style.display = 'none';
 }
 
-let personas = [];
-
-let tokenUsuarioLogueado = '';
-
-let baseURL = 'https://censo.develotion.com/'
-
-inicializar();
-
-function inicializar() {
-    suscripcionAEventos()
-    console.log('Comienza la app')
+function mostrarLogin() {
+    ocultarPantallas();
+    LOGIN.style.display = "block";
 }
+
+
+
+
 
 function suscripcionAEventos() {
     // Login.
@@ -68,19 +74,19 @@ function suscripcionAEventos() {
     //COMBO_FILTRO_SUCURSALES.addEventListener("ionChange", comboSucursalesChangeHandler);
 }
 
-
-
-
 function actualizarMenu() {
-    // Oculto todo, luego mostraré sólo lo que corresponde.
+    document.querySelector("#btnMenuHome").style.display = "none";
     document.querySelector("#btnMenuIngreso").style.display = "none";
     document.querySelector("#btnMenuRegistro").style.display = "none";
+    document.querySelector("#btnMenuRegistrarCenso").style.display = "none";
     document.querySelector("#btnMenuCerrarSesion").style.display = "none";
     if (tokenUsuarioLogueado) {
+        document.querySelector("#btnMenuHome").style.display = "block";
+        document.querySelector("#btnMenuRegistrarCenso").style.display = "block";
         document.querySelector("#btnMenuCerrarSesion").style.display = "block";  
     } else {
-        //document.querySelector("#btnMenuIngreso").style.display = "block";
-        //document.querySelector("#btnMenuRegistro").style.display = "block";
+        document.querySelector("#btnMenuIngreso").style.display = "block";
+        document.querySelector("#btnMenuRegistro").style.display = "block";
     }
 }
 
@@ -98,45 +104,46 @@ function cerrarSesion () {
     NAV.popToRoot();
 }
 
-
-
 ///////////////////////////////////////////////////////////////////////////////////
-
 
 //////////////////////////// LOGIN ////////////////////////////////////////////////
 
 function btnLoginIngresarHandler () {
     const emailIngresado = document.querySelector("#txtLoginEmail").value;
     const passwordIngresado = document.querySelector("#txtLoginPassword").value;
+
     console.log("Comienzo a registrar un usuario");
     if (emailIngresado.trim().length > 0 && passwordIngresado.trim().length > 0) {
         let datos = {
-            email: emailIngresado,
+            usuario: emailIngresado,
             password: passwordIngresado
         };
         
-        fetch(baseURL + 'login.php', {
+        fetch('https://censo.develotion.com/login.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(datos)
-            
         })
         .then(response => {
             console.log("LLego al then", response);
             return response.json();
         })
         .then(data => {
-            if (data.error) {
-                mostrarToast('ERROR', 'Error', data.error);
+            if (data.mensaje) {
+                mostrarToast('ERROR', 'Error', data.mensaje);
+            }else{
+                tokenUsuarioLogueado = data.apiKey;
+                localStorage.setItem('APPProductosToken', tokenUsuarioLogueado);
+                actualizarMenu();
+                NAV.setRoot("page-home");
             }
         })
         .catch(error => console.log(error));
     } else {
         mostrarToast('ERROR', 'Datos incompletos', 'Debe ingresar email y contraseña');
     }
-    console.log("Llego hasta aca, final de la funcion");
 }
 
 async function mostrarToast(tipo, titulo, mensaje) {
@@ -156,7 +163,6 @@ async function mostrarToast(tipo, titulo, mensaje) {
     document.body.appendChild(toast);
     return toast.present();
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -205,12 +211,12 @@ function btnRegistroRegistrarseHandler () {
     }
 }
 
-
-
-function vaciarCamposRegistro() {
+    function vaciarCamposRegistro() {
     document.querySelector("#txtRegistroUsuario").value = '';
     document.querySelector("#txtRegistroPassword").value = '';
+    //document.querySelector("#txtVerificarPassword").value = '';
 }
+
 
 
 
@@ -229,4 +235,3 @@ function listarCenso(){
 }
 
 //////////////////////////////////////////////////////////////////////////////////
-
