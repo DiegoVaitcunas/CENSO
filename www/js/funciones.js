@@ -4,7 +4,7 @@ const ROUTER = document.querySelector('#ruteo');
 const HOME = document.querySelector('#pantalla-home');
 const LOGIN = document.querySelector('#pantalla-login');
 const REGISTRO = document.querySelector('#pantalla-registro');
-const REGISTRAR_CENSO = document.querySelector('#pantalla-registros');
+//const REGISTRAR_CENSO = document.querySelector('#pantalla-registros');
 /*const MAPA = document.querySelector('#menu');*/
 
 
@@ -41,7 +41,7 @@ function ocultarPantallas(){
     HOME.style.display = 'none';
     LOGIN.style.display = 'none';
     REGISTRO.style.display = 'none';
-    REGISTRAR_CENSO.style.display = 'none';
+    //REGISTRAR_CENSO.style.display = 'none';
 }
 
 let personas = [];
@@ -61,7 +61,7 @@ function suscripcionAEventos() {
     // Login.
     document.querySelector("#btnLoginIngresar").addEventListener("click", btnLoginIngresarHandler);
     // Registro.
-    //document.querySelector("#btnRegistroRegistrarse").addEventListener("click", btnRegistroRegistrarseHandler);
+    document.querySelector("#btnRegistroRegistrarse").addEventListener("click", btnRegistroRegistrarseHandler);
     // Ruteo
     ROUTER.addEventListener("ionRouteDidChange", navegar);
     // Sucursales
@@ -83,6 +83,22 @@ function actualizarMenu() {
         //document.querySelector("#btnMenuRegistro").style.display = "block";
     }
 }
+
+function cerrarSesionPorFaltaDeToken() {
+    mostrarToast('ERROR', 'No autorizado', 'Se ha cerrado sesión por seguridad');
+    cerrarSesion();
+}
+
+function cerrarSesion () {
+    cerrarMenu();
+    localStorage.clear();
+    tokenUsuarioLogueado = '';
+    actualizarMenu();
+    NAV.setRoot("page-login");
+    NAV.popToRoot();
+}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -135,7 +151,7 @@ async function mostrarToast(tipo, titulo, mensaje) {
         toast.color = "success";
     } else if (tipo === "WARNING") {
         toast.color = "warning";
-    }
+}
 
     document.body.appendChild(toast);
     return toast.present();
@@ -146,14 +162,57 @@ async function mostrarToast(tipo, titulo, mensaje) {
 
 
 //////////////////////////// REGISTRO /////////////////////////////////////////////
-function vaciarCamposRegistro() {
-    document.querySelector("#txtRegistroNombre").value = '';
-    document.querySelector("#txtRegistroApellido").value = '';
-    document.querySelector("#txtRegistroEmail").value = '';
-    document.querySelector("#txtRegistroDireccion").value = '';
-    document.querySelector("#txtRegistroPassword").value = '';
-    document.querySelector("#txtRegistroVerificacionPassword").value = '';
+
+function btnRegistroRegistrarseHandler () {
+    const usuario = document.querySelector("#txtRegistroUsuario").value;
+    const passwordIngresado = document.querySelector("#txtRegistroPassword").value;
+    //verificar ppass
+    // Verifico que el usuario haya escrito algo en todos los campos.
+    if (
+        usuario.trim().length > 0 &&
+        passwordIngresado.trim().length > 0
+
+        
+    ) {
+        let datos = {
+            usuario: usuario,
+            password: passwordIngresado
+        };
+            fetch(baseURL + 'usuarios.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datos)
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    vaciarCamposRegistro();
+                    mostrarToast('SUCCESS', 'Registro exitoso', 'Ya puede iniciar sesión');
+                    listarCenso();
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    mostrarToast('ERROR', 'Error', data.error);
+                }
+            })
+            .catch(error => console.log(error));
+
+        } else {
+            mostrarToast('ERROR', 'Datos incompletos', 'Todos los campos son obligatorios');
+    }
 }
+
+
+
+function vaciarCamposRegistro() {
+    document.querySelector("#txtRegistroUsuario").value = '';
+    document.querySelector("#txtRegistroPassword").value = '';
+}
+
+
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -165,7 +224,9 @@ function vaciarCamposRegistro() {
 
 
 /////////////////////////// LISTAR CENSO /////////////////////////////////////////
-
+function listarCenso(){
+    console.log("Llegamos a la pagina listar censo")
+}
 
 //////////////////////////////////////////////////////////////////////////////////
 
