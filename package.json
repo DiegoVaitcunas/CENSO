@@ -1,0 +1,22 @@
+{
+  "name": "www",
+  "version": "1.0.0",
+  "description": "paquete capacitor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@capacitor/android": "^5.2.2",
+    "@capacitor/core": "^5.2.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^5.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "Diego-1"
+  }
+}
